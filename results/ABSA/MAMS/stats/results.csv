@@ -1,0 +1,7 @@
+Model,Accuracy,Precision (micro),Precision (macro),Recall (micro),Recall (macro),F1 (micro),F1 (macro),Execution time (s)
+BERT PT+Dropout+Linear,99.69,99.69,82.68,99.69,88.20,99.69,85.20,1445.99
+BERT PT+Dropout+BiLSTM+Linear,99.62,99.62,78.08,99.62,85.84,99.62,81.58,1594.97
+BERT PT+Dropout+CNN+BiLSTM+Linear,99.12,99.12,49.65,99.12,31.52,99.12,33.56,1612.20
+BERT FT+Dropout+Linear,99.87,99.87,91.44,99.87,96.04,99.87,93.64,1437.03
+BERT FT+Dropout+BiLSTM+Linear,99.84,99.84,89.42,99.84,95.29,99.84,92.18,1584.32
+BERT FT+Dropout+CNN+BiLSTM+Linear,99.19,99.19,49.09,99.19,40.42,99.19,40.75,1612.22
