@@ -1,6 +1,8 @@
 import sys
 import os
 
+import time
+
 sys.path.insert(0, os.path.dirname(os.getcwd()))
 sys.path.insert(0, os.path.dirname(os.path.join(os.getcwd(), '..', 'src/')))
 sys.path.insert(0, os.path.dirname(os.path.join(os.getcwd(), '..', 'src/ATE/ate_models')))
@@ -24,8 +26,23 @@ app = Flask(__name__)
 
 device = 'cpu'
 
+# ate_model = torch.load('../results/ATE/MAMS/models/bert_pre_trained_dropout_linear_512.pth').to(device)
+# absa_model = torch.load('../results/ABSA/MAMS/models/bert_pre_trained_dropout_linear_512.pth').to(device)
+
+# ate_model = torch.load('../results/ATE/MAMS/models/bert_pre_trained_dropout_bilstm_linear_512.pth').to(device)
+# absa_model = torch.load('../results/ABSA/MAMS/models/bert_pre_trained_dropout_bilstm_linear_512.pth').to(device)
+
+# ate_model = torch.load('../results/ATE/MAMS/models/bert_pre_trained_dropout_cnn_bilstm_linear_512.pth', map_location=torch.device('cpu'))
+# absa_model = torch.load('../results/ABSA/MAMS/models/bert_pre_trained_dropout_cnn_bilstm_linear_512.pth', map_location=torch.device('cpu'))
+
+# ate_model = torch.load('../results/ATE/MAMS/models/bert_fine_tuned_dropout_linear_512.pth').to(device)
+# absa_model = torch.load('../results/ABSA/MAMS/models/bert_fine_tuned_dropout_linear_512.pth').to(device)
+
 ate_model = torch.load('../results/ATE/MAMS/models/bert_fine_tuned_dropout_bilstm_linear_512.pth').to(device)
 absa_model = torch.load('../results/ABSA/MAMS/models/bert_fine_tuned_dropout_bilstm_linear_512.pth').to(device)
+
+# ate_model = torch.load('../results/ATE/MAMS/models/bert_fine_tuned_dropout_cnn_bilstm_linear_512.pth').to(device)
+# absa_model = torch.load('../results/ABSA/MAMS/models/bert_fine_tuned_dropout_cnn_bilstm_linear_512.pth').to(device)
 
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 nlp = spacy.load('en_core_web_lg')
@@ -98,6 +115,8 @@ def sa_extraction(df):
 
 @app.route('/predict', methods=["POST"])
 def absa():
+    start = time.time()
+
     input_json = request.get_json(force=True)
 
     df = pd.DataFrame(columns=['text','tokens','iob_aspect_tags', 'absa_tags'])
@@ -120,4 +139,10 @@ def absa():
         'sa_outputs': sa_outputs[:len(tokens)]
     }
 
-    return jsonify(dictToReturn)
+    response = jsonify(dictToReturn)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    end = time.time()
+    print('Execution time: ', end - start)
+
+    return response
